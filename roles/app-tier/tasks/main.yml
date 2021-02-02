@@ -1,45 +1,43 @@
 ---
-# tasks file for roles/tomcat
-- name: install tomcat
-  yum:
+- name: Install Tomcat package(s)
+  package:
+    name: "{{ app_server_packages }}"
+    state: present
+  tags:
+    - apps
+    - tomcat
+
+- name: Copy tomcat-juli.jar file into tomcat bin folder
+  copy:
+    src: /usr/share/java/tomcat/extras/tomcat-juli.jar
+    dest: /usr/share/tomcat/bin/tomcat-juli.jar
+    remote_src: yes
+  tags:
+    - apps
+    - tomcat
+
+- name: Enable Tomcat sercice daemon at boot
+  service:
     name: tomcat
-    state: latest
+    enabled: yes
+  tags:
+    - apps
+    - tomcat
 
-- name: create ansible tomcat directory
+- name: Create the Tomcat content directory
   file:
-    path: /usr/share/tomcat/webapps/ROOT
+    path: "{{ tomcat_web_root }}"
     state: directory
+  tags:
+    - apps
+    - tomcat
 
-- name: copy static index.html to tomcat webapps/ansible/index.html
+- name: Copy static index.html to tomcat webapps/ansible/index.html
   template:
     src: index.html.j2
     dest: /usr/share/tomcat/webapps/ROOT/index.html
     mode: 0644
-
-- block:
-  - name: create ansible tomcat directory
-    file:
-        path: /usr/share/tomcat/webapps/ansible
-        state: directory
-  - name: copy static index.html to tomcat webapps/ansible/index.html
-    template:
-        src: index.html.app1
-        dest: /usr/share/tomcat/webapps/ansible/index.html
-  when: inventory_hostname == "app1"
-
-- block:
-  - name: create ansible tomcat directory
-    file:
-        path: /usr/share/tomcat/webapps/ansible
-        state: directory
-  - name: copy static index.html to tomcat webapps/ansible/index.html
-    template:
-        src: index.html.app2
-        dest: /usr/share/tomcat/webapps/ansible/index.html
-  when: inventory_hostname == "app2"
-
-- name: start tomcat
-  service:
-    name: tomcat
-    state: started
-    enabled: yes
+  tags:
+    - apps
+    - tomcat
+  notify: start_tomcat

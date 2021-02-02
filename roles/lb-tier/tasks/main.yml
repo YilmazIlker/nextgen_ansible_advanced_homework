@@ -1,8 +1,8 @@
 ---
 - name: install HAProxy
-  yum:
-    name: haproxy 
-    state: latest
+  package:
+    name: "{{ load_balancer_packages }}"
+    state: present
 
 - name: start and enable HAProxy
   service:
