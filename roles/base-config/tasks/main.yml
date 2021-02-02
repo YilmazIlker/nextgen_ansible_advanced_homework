@@ -6,8 +6,8 @@
     replace: 'Defaults  !requiretty'
     backup: yes
 
-# - name: Enable repos
-#   template:
-#     src: internal.repo.repos
-#     dest: /etc/yum.repos.d/internal.repo
+- name: Enable repos
+  template:
+    src: internal.repo.repos
+    dest: /etc/yum.repos.d/internal.repo
 
