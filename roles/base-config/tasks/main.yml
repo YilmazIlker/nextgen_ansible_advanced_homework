@@ -14,13 +14,3 @@
     group: root
     mode: 0644
 
-- name: Enable the EPEL repository
-  shell: yum-config-manager --enable epel.repo
-
-- name: Install HTTPD and HAProxy packges
-  yum:
-    name:
-      - httpd
-      - haproxy
-    state: latest
-
