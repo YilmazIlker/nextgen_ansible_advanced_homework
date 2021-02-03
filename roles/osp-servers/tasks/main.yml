@@ -15,17 +15,12 @@
     userdata: |
       #!/bin/bash
       curl -o /tmp/openstack.pub http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
-      curl -o /tmp/openstack.pem http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pem
       cat /tmp/openstack.pub >> /home/cloud-user/.ssh/authorized_keys
-      cp /tmp/openstack.pem /home/cloud-user/.ssh/.
-      cat /tmp/openstack.pem >> /home/cloud-user/.ssh/authorized_keys
   with_subelements:
     - "{{osp_servers}}"
     - meta
   tags:
   - test.servers
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
 
 - name: Add floating IP to Servers
   os_floating_ip:

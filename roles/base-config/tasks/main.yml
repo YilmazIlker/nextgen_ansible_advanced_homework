@@ -1,4 +1,6 @@
 ---
+# Initial, common, system setup steps
+
 - name: enable sudo without tty for some ansible commands
   replace:
     path: /etc/sudoers
@@ -6,11 +8,20 @@
     replace: 'Defaults  !requiretty'
     backup: yes
 
-- name: Enable repos
+- name: enable repos
   template:
     src: repos_template.j2
-    dest: /etc/yum.repos.d/tier-three-apps.repo
-    owner: root
-    group: root
+    dest: /etc/yum.repos.d/open_three-tier-app.repo
     mode: 0644
 
+#- name: setup hostname
+#  hostname:
+#    name: "{{ inventory_hostname }}"
+ 
+- name: install base tools and packages
+  yum:
+    name: "{{ item }}" 
+    state: latest
+  with_items:
+    - httpie
+    - python-pip
